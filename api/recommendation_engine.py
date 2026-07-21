@@ -10,13 +10,13 @@ def generate_recommendations(
     recommendations = []
 
     # Risk Level
-    if risk_probability < 0.40:
+    if risk_probability < 40:
         risk_level = "Low"
 
-    elif risk_probability < 0.70:
+    elif risk_probability < 70:
         risk_level = "Medium"
 
-    elif risk_probability < 0.95:
+    elif risk_probability < 95:
         risk_level = "High"
 
     else:

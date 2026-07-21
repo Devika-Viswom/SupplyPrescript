@@ -2,6 +2,8 @@ from pydantic import BaseModel
 
 
 class ShipmentInput(BaseModel):
+    shipment_date: str
+    
     origin_port: str
     destination_port: str
     transport_mode: str
