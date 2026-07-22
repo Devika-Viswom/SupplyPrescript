@@ -6,6 +6,15 @@ from datetime import datetime
 from schemas import ShipmentInput
 from recommendation_engine import generate_recommendations
 
+from dashboard import (
+    get_summary,
+    get_leadtime_by_mode,
+    get_disruption_by_weather,
+    get_monthly_shipments,
+    get_route_distribution,
+    get_recent_shipments
+)
+
 clf_model = joblib.load(
     "../models/disruption_pipeline.pkl"
 )
@@ -375,3 +384,30 @@ def compare_modes(data: ShipmentInput):
         "comparison":
             comparison
     }
+
+@app.get("/dashboard/summary")
+def dashboard_summary():
+
+    return get_summary()
+
+@app.get("/dashboard/charts")
+def dashboard_charts():
+
+    return {
+        "lead_time_by_mode":
+            get_leadtime_by_mode(),
+
+        "disruption_by_weather":
+            get_disruption_by_weather(),
+
+        "monthly_shipments":
+            get_monthly_shipments(),
+
+        "route_distribution":
+            get_route_distribution()
+    }
+
+@app.get("/dashboard/shipments")
+def dashboard_shipments():
+
+    return get_recent_shipments()
