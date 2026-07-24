@@ -14,6 +14,7 @@ from dashboard import (
     get_route_distribution,
     get_recent_shipments
 )
+from insights import get_insights
 
 clf_model = joblib.load(
     "../models/disruption_pipeline.pkl"
@@ -411,3 +412,8 @@ def dashboard_charts():
 def dashboard_shipments():
 
     return get_recent_shipments()
+
+@app.get("/insights")
+def dashboard_insights():
+
+    return get_insights()
