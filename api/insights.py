@@ -17,13 +17,50 @@ clf_model = joblib.load("../models/disruption_pipeline.pkl")
 
 reg_model = joblib.load("../models/leadtime_pipeline.pkl")
 
-df = pd.read_pickle("../data/df_final.pkl")
+df = pd.read_pickle("../data/processed/df_final.pkl")
 
-def get_insights():
+def get_top_weather_risks():
 
-    # ==========================
-    # CLASSIFIER
-    # ==========================
+    weather_risk = (
+        df.groupby(
+            "Weather_Condition"
+        )["Disruption_Occurred"]
+        .mean()
+        .sort_values(
+            ascending=False
+        )
+        * 100
+    ).round(2)
+
+    return weather_risk.to_dict()
+
+def get_dataset_insights():
+
+    disruption_rate = round(
+        df["Disruption_Occurred"].mean() * 100,
+        2
+    )
+
+    avg_lead_time = round(
+        df["Lead_Time_Days"].mean(),
+        2
+    )
+
+    total_shipments = len(df)
+
+    return {
+
+        "total_shipments":
+            total_shipments,
+
+        "avg_lead_time":
+            avg_lead_time,
+
+        "disruption_rate":
+            disruption_rate
+    }
+
+def get_disruption_classifier_insights():
 
     X_clf = df.drop(
         [
@@ -64,9 +101,39 @@ def get_insights():
         y_pred
     )
 
-    # ==========================
-    # REGRESSOR
-    # ==========================
+    return {
+
+        "model":
+            type(
+                clf_model.named_steps["model"]
+            ).__name__,
+
+        "accuracy":
+            round(
+                accuracy * 100,
+                2
+            ),
+
+        "precision":
+            round(
+                precision * 100,
+                2
+            ),
+
+        "recall":
+            round(
+                recall * 100,
+                2
+            ),
+
+        "f1_score":
+                round(
+                f1 * 100,
+                2
+            )
+    }
+
+def get_leadtime_regressor_insights():
 
     X_reg = df.drop(
         [
@@ -106,113 +173,28 @@ def get_insights():
         lead_pred
     )
 
-    # ==========================
-    # DATASET INSIGHTS
-    # ==========================
-
-    disruption_rate = round(
-        df["Disruption_Occurred"].mean() * 100,
-        2
-    )
-
-    avg_lead_time = round(
-        df["Lead_Time_Days"].mean(),
-        2
-    )
-
-    total_shipments = len(df)
-
-    # ==========================
-    # TOP RISKS
-    # ==========================
-
-    weather_risk = (
-        df.groupby(
-            "Weather_Condition"
-        )["Disruption_Occurred"]
-        .mean()
-        .sort_values(
-            ascending=False
-        )
-        * 100
-    ).round(2)
-
-    # ==========================
-    # RESPONSE
-    # ==========================
-
     return {
 
-        "dataset": {
+        "model":
+            type(
+                reg_model.named_steps["model"]
+            ).__name__,
 
-            "total_shipments":
-                total_shipments,
+        "mae":
+            round(
+                mae,
+                3
+            ),
 
-            "avg_lead_time":
-                avg_lead_time,
+        "rmse":
+            round(
+                rmse,
+                3
+            ),
 
-            "disruption_rate":
-                disruption_rate
-        },
-
-        "classifier": {
-
-            "model":
-                type(
-                    clf_model.named_steps["model"]
-                ).__name__,
-
-            "accuracy":
-                round(
-                    accuracy * 100,
-                    2
-                ),
-
-            "precision":
-                round(
-                    precision * 100,
-                    2
-                ),
-
-            "recall":
-                round(
-                    recall * 100,
-                    2
-                ),
-
-            "f1_score":
-                round(
-                    f1 * 100,
-                    2
-                )
-        },
-
-        "regressor": {
-
-            "model":
-                type(
-                    reg_model.named_steps["model"]
-                ).__name__,
-
-            "mae":
-                round(
-                    mae,
-                    3
-                ),
-
-            "rmse":
-                round(
-                    rmse,
-                    3
-                ),
-
-            "r2":
-                round(
-                    r2,
-                    4
-                )
-        },
-
-        "top_weather_risks":
-            weather_risk.to_dict()
+        "r2":
+            round(
+                r2,
+                4
+            )
     }

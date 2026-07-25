@@ -14,7 +14,12 @@ from dashboard import (
     get_route_distribution,
     get_recent_shipments
 )
-from insights import get_insights
+from insights import (
+    get_top_weather_risks,
+    get_dataset_insights,
+    get_disruption_classifier_insights,
+    get_leadtime_regressor_insights
+)
 
 clf_model = joblib.load(
     "../models/disruption_pipeline.pkl"
@@ -413,7 +418,32 @@ def dashboard_shipments():
 
     return get_recent_shipments()
 
-@app.get("/insights")
-def dashboard_insights():
+@app.get("/insights/weather_risks")
+def insights_weather_risks():
 
-    return get_insights()
+    return {
+        "top_weather_risks": get_top_weather_risks()
+    }
+
+@app.get("/insights/dataset")
+def insights_dataset():
+
+    return {
+        "dataset_insights": get_dataset_insights()
+    }
+
+@app.get("/insights/disruption_classifier")
+def insights_disruption_classifier():
+
+    return {
+        "disruption_classifier_insights":
+            get_disruption_classifier_insights()
+    }
+
+@app.get("/insights/leadtime_regressor")
+def insights_leadtime_regressor():
+
+    return {
+        "leadtime_regressor_insights":
+            get_leadtime_regressor_insights()
+    }
