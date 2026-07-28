@@ -4,6 +4,8 @@ import pandas as pd
 from schemas import ShipmentInput
 from recommendation_engine import generate_recommendations
 
+from history import save_prediction
+
 clf_model = joblib.load(
     "../models/disruption_pipeline.pkl"
 )
@@ -287,35 +289,28 @@ def predict_shipment(data):
             x["risk_probability"]
     )
 
+    prediction_result = {
+        "disruption_prediction": disruption_prediction,
+        "risk_probability": risk_probability,
+        "risk_level": risk_level,
+        "confidence_score": confidence_score,
+        "predicted_lead_time": lead_time,
+        "delay_category": delay_category,
+        "recommendations": recommendations
+    }
+
+    comparison_result = {
+        "recommended_mode": best_option["mode"],
+        "recommendation_reason": recommendation_reason,
+        "fastest_mode": fastest_mode["mode"],
+        "cheapest_mode": cheapest_mode["mode"],
+        "lowest_risk_mode": lowest_risk_mode["mode"],
+        "modes": comparison
+    }
+
+    save_prediction(data, prediction_result, comparison_result)
+
     return {
-        "prediction": {
-            "disruption_prediction":
-                disruption_prediction,
-            "risk_probability":
-                risk_probability,
-            "risk_level":
-                risk_level,
-            "confidence_score":
-                confidence_score,
-            "predicted_lead_time":
-                lead_time,
-            "delay_category":
-                delay_category,
-            "recommendations":
-                recommendations
-        },
-        "comparison": {
-            "recommended_mode":
-                best_option["mode"],
-            "recommendation_reason":
-                recommendation_reason,
-            "fastest_mode":
-                fastest_mode["mode"],
-            "cheapest_mode":
-                cheapest_mode["mode"],
-            "lowest_risk_mode":
-                lowest_risk_mode["mode"],
-            "modes":
-                comparison
-        }
+        "prediction": prediction_result,
+        "comparison": comparison_result
     }
