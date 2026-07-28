@@ -34,6 +34,7 @@ def get_top_weather_risks():
 
     return weather_risk.to_dict()
 
+
 def get_dataset_insights():
 
     disruption_rate = round(
@@ -59,6 +60,7 @@ def get_dataset_insights():
         "disruption_rate":
             disruption_rate
     }
+
 
 def get_disruption_classifier_insights():
 
@@ -132,6 +134,7 @@ def get_disruption_classifier_insights():
                 2
             )
     }
+
 
 def get_leadtime_regressor_insights():
 
