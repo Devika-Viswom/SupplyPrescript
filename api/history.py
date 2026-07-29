@@ -46,7 +46,7 @@ def save_prediction(
         ?,?,?,?,?,?,
         ?,?,?,?,?,?,
         ?,?,?,?,?,?,
-        ?,?
+        ?
     )
     """,
 
@@ -67,7 +67,7 @@ def save_prediction(
         prediction["disruption_prediction"],
         prediction["risk_probability"],
         prediction["risk_level"],
-        prediction["confidence"],
+        prediction["confidence_score"],
         prediction["predicted_lead_time"],
         prediction["delay_category"],
         json.dumps(prediction["recommendations"]),

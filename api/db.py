@@ -4,7 +4,7 @@ conn = sqlite3.connect("../database/history.db", check_same_thread=False)
 
 cursor = conn.cursor()
 
-
+'''
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS prediction_history (
 
@@ -40,3 +40,4 @@ CREATE TABLE IF NOT EXISTS prediction_history (
 conn.commit()
 
 print("Database Ready")
+'''

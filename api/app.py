@@ -19,6 +19,8 @@ from insights import (
     get_leadtime_regressor_insights
 )
 
+from history_service import get_prediction_history
+
 app = FastAPI(
     title="SupplyPrescript API"
 )
@@ -90,4 +92,15 @@ def insights_leadtime_regressor():
     return {
         "leadtime_regressor_insights":
             get_leadtime_regressor_insights()
+    }
+
+@app.get("/history")
+def get_history(page: int = 1):
+
+    data=get_prediction_history(page=page)
+
+    return {
+        "page": page,
+        "page_size": 50,
+        "records": data
     }
