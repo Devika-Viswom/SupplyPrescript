@@ -1,6 +1,10 @@
 import sqlite3
+from pathlib import Path
 
-conn = sqlite3.connect("../database/history.db", check_same_thread=False)
+BASE_DIR = Path(__file__).resolve().parent
+DB_PATH = BASE_DIR.parent / "database" / "history.db"
+
+conn = sqlite3.connect(DB_PATH, check_same_thread=False)
 
 cursor = conn.cursor()
 

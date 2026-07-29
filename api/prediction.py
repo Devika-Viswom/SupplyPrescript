@@ -1,18 +1,17 @@
 import joblib
 import pandas as pd
+from pathlib import Path
 
 from schemas import ShipmentInput
 from recommendation_engine import generate_recommendations
 
 from history import save_prediction
 
-clf_model = joblib.load(
-    "../models/disruption_pipeline.pkl"
-)
+BASE_DIR = Path(__file__).resolve().parent
 
-reg_model = joblib.load(
-    "../models/leadtime_pipeline.pkl"
-)
+clf_model = joblib.load(BASE_DIR.parent / "models" / "disruption_pipeline.pkl")
+
+reg_model = joblib.load(BASE_DIR.parent / "models" / "leadtime_pipeline.pkl")
 
 def build_input_df(data):
 
