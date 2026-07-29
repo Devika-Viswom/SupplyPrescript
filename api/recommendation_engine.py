@@ -89,7 +89,7 @@ def generate_recommendations(
             )
 
     # Critical
-    if risk_probability > 0.95:
+    if risk_probability > 95:
 
         recommendations.append(
             "Immediate management review required"
