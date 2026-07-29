@@ -32,9 +32,9 @@ git push origin main
 
 ---
 
-# 🚚 SupplyPrescript: AI-Powered Supply Chain Risk Prediction & Prescriptive Analytics
+# SupplyPrescript: AI-Powered Supply Chain Risk Prediction & Prescriptive Analytics
 
-## 📌 Project Overview
+## Project Overview
 
 SupplyPrescript is an end-to-end AI-powered Supply Chain Analytics platform designed to predict shipment disruptions, estimate delivery lead times, and generate actionable recommendations to support operational decision-making.
 
@@ -44,7 +44,7 @@ By transforming raw logistics data into predictive insights and prescriptive act
 
 ---
 
-## 🎯 Problem Statement
+## Problem Statement
 
 Supply chains face frequent disruptions due to:
 
@@ -70,7 +70,7 @@ SupplyPrescript helps organizations:
 
 ---
 
-## 🚀 Key Features
+## Key Features
 
 ### 1. Disruption Risk Prediction
 
@@ -134,7 +134,7 @@ Capabilities:
 
 ---
 
-## 🏗️ System Architecture
+## System Architecture
 
 ```text
                     User Input
@@ -160,7 +160,7 @@ Disruption Model   Lead Time Model   Recommendation Engine
 
 ---
 
-## 📊 Dataset Information
+## Dataset Information
 
 ### Dataset Size
 
@@ -188,7 +188,7 @@ Disruption Model   Lead Time Model   Recommendation Engine
 
 ---
 
-## ⚙️ Data Processing Pipeline
+## Data Processing Pipeline
 
 ### Data Understanding
 
@@ -242,7 +242,7 @@ Generated Features:
 
 ---
 
-## 🤖 Machine Learning Models
+## Machine Learning Models
 
 ### Model 1: Disruption Prediction
 
@@ -290,7 +290,7 @@ Random Forest Regressor
 
 ---
 
-## 📈 Key Business Insights
+## Key Business Insights
 
 ### Major Disruption Drivers
 
@@ -314,7 +314,7 @@ Random Forest Regressor
 
 ---
 
-## 📚 Notebook Workflow
+## Notebook Workflow
 
 | Notebook | Purpose |
 |-----------|----------|
@@ -329,7 +329,7 @@ Random Forest Regressor
 
 ---
 
-## 🔌 API Services
+## API Services
 
 ### Prediction Endpoint
 
@@ -374,7 +374,7 @@ POST /predict
 
 ---
 
-## 🖥️ Dashboard Components
+## Dashboard Components
 
 ### Dashboard Page
 
@@ -407,7 +407,7 @@ Displays:
 
 ---
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 ### Programming
 
@@ -448,7 +448,7 @@ Displays:
 
 ---
 
-## ⚡ Installation
+## Installation
 
 ### Clone Repository
 
@@ -485,7 +485,7 @@ pip install -r requirements.txt
 
 ---
 
-## ▶️ Running the API
+## Running the API
 
 ```bash
 cd api
@@ -500,7 +500,7 @@ http://localhost:8000/docs
 
 ---
 
-## 💼 Business Value
+## Business Value
 
 SupplyPrescript helps organizations:
 
@@ -513,7 +513,7 @@ SupplyPrescript helps organizations:
 
 ---
 
-## 🔮 Future Enhancements
+## Future Enhancements
 
 - Real-Time Weather API Integration
 - Live Geopolitical Risk Monitoring

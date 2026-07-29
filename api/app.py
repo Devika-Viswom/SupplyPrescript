@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.responses import StreamingResponse
 
 from schemas import ShipmentInput
 
@@ -19,7 +20,12 @@ from insights import (
     get_leadtime_regressor_insights
 )
 
-from history_service import get_prediction_history
+from history_service import (
+    get_prediction_history,
+    get_prediction_by_id
+)
+
+from report import generate_pdf_report
 
 app = FastAPI(
     title="SupplyPrescript API"
@@ -104,3 +110,22 @@ def get_history(page: int = 1):
         "page_size": 50,
         "records": data
     }
+
+@app.get("/report/{prediction_id}")
+def get_report(prediction_id: int):
+
+    record = get_prediction_by_id(prediction_id)
+
+    if not record:
+        return {"error": "Prediction not found"}
+
+    pdf_buffer = generate_pdf_report(record)
+
+    return StreamingResponse(
+        pdf_buffer,
+        media_type="application/pdf",
+        headers={
+            "Content-Disposition":
+            f"attachment; filename=SupplyPrescript_Report_{prediction_id}.pdf"
+        }
+    )
