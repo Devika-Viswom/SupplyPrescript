@@ -1,18 +1,14 @@
-import sqlite3
-from pathlib import Path
+import os
+import psycopg2
 
-BASE_DIR = Path(__file__).resolve().parent
-DB_PATH = BASE_DIR.parent / "database" / "history.db"
-
-conn = sqlite3.connect(DB_PATH, check_same_thread=False)
-
+conn = psycopg2.connect(os.getenv("DATABASE_URL"))
+'''
 cursor = conn.cursor()
 
-'''
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS prediction_history (
 
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id BIGSERIAL PRIMARY KEY,
     created_at TEXT,
     shipment_date TEXT,
     origin_port TEXT,
@@ -44,4 +40,6 @@ CREATE TABLE IF NOT EXISTS prediction_history (
 conn.commit()
 
 print("Database Ready")
+
+cursor.close()
 '''
