@@ -1,6 +1,10 @@
 import pandas as pd
+from pathlib import Path
 
-df = pd.read_pickle("../data/processed/df_model.pkl")
+BASE_DIR = Path(__file__).resolve().parent
+DB_PATH = BASE_DIR.parent / "data" / "processed" / "df_model.pkl"
+
+df = pd.read_pickle(DB_PATH)
 
 def get_summary():
 

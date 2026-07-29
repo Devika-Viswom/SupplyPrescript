@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import joblib
+from pathlib import Path
 
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import (
@@ -13,11 +14,13 @@ from sklearn.metrics import (
     r2_score
 )
 
-clf_model = joblib.load("../models/disruption_pipeline.pkl")
+BASE_DIR = Path(__file__).resolve().parent
 
-reg_model = joblib.load("../models/leadtime_pipeline.pkl")
+clf_model = joblib.load(BASE_DIR.parent / "models" / "disruption_pipeline.pkl")
 
-df = pd.read_pickle("../data/processed/df_final.pkl")
+reg_model = joblib.load(BASE_DIR.parent / "models" / "leadtime_pipeline.pkl")
+
+df = pd.read_pickle(BASE_DIR.parent / "data" / "processed" / "df_final.pkl")
 
 def get_top_weather_risks():
 
