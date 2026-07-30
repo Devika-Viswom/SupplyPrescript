@@ -45,3 +45,9 @@ Raw Data
 → Feature Engineering
 → Processed Data
 → Model Training
+
+## Important
+
+Do not modify raw datasets directly.
+
+Any preprocessing should be performed through notebooks and stored in the `processed/` folder.

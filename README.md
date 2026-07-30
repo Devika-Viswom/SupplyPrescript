@@ -1,6 +1,3 @@
-# SupplyPrescript
-AI-powered Supply Chain Analytics Project
-
 ## Commands before starting of work 
 git pull origin main
 
@@ -160,12 +157,63 @@ Disruption Model   Lead Time Model   Recommendation Engine
 
 ---
 
+## Project Structure
+
+```text
+SupplyPrescript
+│
+├── api/
+│   ├── app.py
+│   ├── prediction.py
+│   ├── dashboard.py
+│   ├── insights.py
+│   ├── history.py
+│   ├── history_service.py
+│   ├── recommendation_engine.py
+│   ├── report.py
+│   ├── schemas.py
+│   └── db.py
+│
+├── data/
+│   ├── raw/
+│   │   └── raw1.csv
+│   │
+│   └── processed/
+│       ├── df_model.pkl
+│       ├── df_final.pkl
+│       ├── df_classification_encoded.pkl
+│       └── df_regression_encoded.pkl
+│
+├── models/
+│   ├── disruption_pipeline.pkl
+│   └── leadtime_pipeline.pkl
+│
+├── notebooks/
+│   ├── 1_data_understanding.ipynb
+│   ├── 2_data_cleaning.ipynb
+│   ├── 3_eda.ipynb
+│   ├── 4_feature_selection.ipynb
+│   ├── 5_disruption_classifier_model.ipynb
+│   ├── 6_lead_days_regressor_model.ipynb
+│   ├── 7_business_analysis.ipynb
+│   └── 8_model_pipeline.ipynb
+│
+├── requirements.txt
+│
+└── README.md
+```
+
+---
+
 ## Dataset Information
 
 ### Dataset Size
 
-- Records: 5,000
-- Features After Engineering: 87
+- Records: 5,000 shipments
+- Original Features: 14
+- Engineered Features: 16
+- Encoded Features: 87
+- Date Range: 2024-01-01 to 2025-12-31
 
 ### Original Features
 
@@ -198,9 +246,11 @@ Disruption Model   Lead Time Model   Recommendation Engine
 
 ### Data Cleaning
 
-- Missing value handling
-- Duplicate checking
-- Data consistency validation
+- Date conversion and parsing
+- Temporal feature generation (Year, Month, Quarter)
+- Route creation (Origin → Destination)
+- Risk categorization
+- Carrier reliability categorization
 
 ### Exploratory Data Analysis
 
@@ -221,19 +271,20 @@ Generated Features:
 
 #### Route Features
 
-- Origin_Port → Destination_Port
+- Routes = Origin_Port → Destination_Port
+- 64 Unique Routes
 
 #### Risk Categories
 
-- Low
-- Medium
-- High
+- Low (0–3)
+- Medium (3–7)
+- High (7–10)
 
 #### Reliability Categories
 
-- Low
-- Medium
-- High
+- Low (<0.65)
+- Medium (0.65–0.85)
+- High (>0.85)
 
 #### Encodings
 
@@ -250,14 +301,24 @@ Generated Features:
 
 Predict whether a shipment will experience disruption.
 
-#### Algorithms Evaluated
+##### Algorithms Evaluated
 
 - Random Forest Classifier
 - XGBoost Classifier
 
-#### Final Model
+#### Final Production Model
 
-Random Forest Classifier
+##### Pipeline:
+
+- OneHotEncoder
+- ColumnTransformer
+- RandomForestClassifier
+
+##### Hyperparameters:
+
+- n_estimators = 500
+- max_depth = 15
+- min_samples_leaf = 5
 
 #### Performance
 
@@ -278,7 +339,15 @@ Predict shipment lead time.
 
 #### Final Model
 
-Random Forest Regressor
+##### Pipeline:
+
+- OneHotEncoder
+- ColumnTransformer
+- RandomForestRegressor
+
+##### Hyperparameters:
+
+- n_estimators = 200
 
 #### Performance
 
@@ -292,25 +361,58 @@ Random Forest Regressor
 
 ## Key Business Insights
 
-### Major Disruption Drivers
+### Disruption Rate by Weather Condition
 
-1. Hurricane Weather Conditions
-2. Geopolitical Risk Score
-3. Carrier Reliability Score
-4. Shipment Distance
+| Weather Condition | Disruption Rate |
+|------------------|----------------|
+| Hurricane | 100.00% |
+| Storm | 79.54% |
+| Fog | 48.07% |
+| Rain | 41.97% |
+| Clear | 36.98% |
 
-### Major Lead Time Drivers
+### Average Lead Time by Weather Condition
 
-1. Hurricane Weather
-2. Distance
-3. Sea Transport Mode
+| Weather Condition | Average Lead Time (Days) |
+|------------------|--------------------------|
+| Hurricane | 53.50 |
+| Storm | 19.30 |
+| Fog | 9.89 |
+| Rain | 7.74 |
+| Clear | 6.70 |
 
-### Risk Trends
+### Average Lead Time by Transport Mode
 
-- Higher geopolitical risk increases disruption probability.
-- Lower carrier reliability increases disruption likelihood.
-- Extreme weather conditions significantly increase lead time.
-- Sea transportation has the highest average lead time.
+| Transport Mode | Average Lead Time (Days) |
+|---------------|--------------------------|
+| Air | 1.64 |
+| Road | 16.45 |
+| Rail | 19.95 |
+| Sea | 39.80 |
+
+### Disruption Rate by Geopolitical Risk Level
+
+| Risk Level | Disruption Rate |
+|-----------|----------------|
+| Low | 47.69% |
+| Medium | 61.71% |
+| High | 73.67% |
+
+### Disruption Rate by Carrier Reliability
+
+| Reliability Level | Disruption Rate |
+|------------------|----------------|
+| High | 56.08% |
+| Medium | 62.31% |
+| Low | 65.31% |
+
+### Key Findings
+
+- Hurricane conditions resulted in a 100% disruption rate and the highest average lead time of 53.5 days.
+- Storm conditions increased disruption probability to nearly 80%.
+- Sea transport recorded the highest average lead time (39.8 days), while Air transport was the fastest (1.64 days).
+- Higher geopolitical risk scores were associated with substantially higher disruption rates.
+- Shipments handled by lower reliability carriers experienced more disruptions than those managed by highly reliable carriers.
 
 ---
 
@@ -329,9 +431,42 @@ Random Forest Regressor
 
 ---
 
-## API Services
+## API Endpoints
 
-### Prediction Endpoint
+
+### Prediction
+
+| Method | Endpoint | Description |
+|----------|----------|-------------|
+| POST | `/predict` | Predict disruption risk, lead time, recommendations, and transport mode comparison |
+
+### Dashboard
+
+| Method | Endpoint | Description |
+|----------|----------|-------------|
+| GET | `/dashboard/summary` | Dashboard KPI summary |
+| GET | `/dashboard/charts` | Chart data for dashboard visualizations |
+| GET | `/dashboard/shipments` | Latest 50 shipment records |
+
+### Insights
+
+| Method | Endpoint | Description |
+|----------|----------|-------------|
+| GET | `/insights/weather_risks` | Weather-related disruption analysis |
+| GET | `/insights/dataset` | Dataset summary statistics |
+| GET | `/insights/disruption_classifier` | Classification model metrics |
+| GET | `/insights/leadtime_regressor` | Regression model metrics |
+
+### History & Reports
+
+| Method | Endpoint | Description |
+|----------|----------|-------------|
+| GET | `/history?page=1` | Paginated prediction history |
+| GET | `/report/{prediction_id}` | Generate PDF report for a prediction |
+
+---
+
+## Prediction Endpoint
 
 ```http
 POST /predict
@@ -407,6 +542,100 @@ Displays:
 
 ---
 
+## Prediction History
+
+All shipment predictions generated through the API are automatically stored in PostgreSQL for auditability and future analysis.
+
+Stored Information:
+
+- Shipment details
+- Risk prediction results
+- Lead time predictions
+- Confidence score
+- Generated recommendations
+- Transport mode comparison
+- Recommended transport strategy
+
+Features:
+
+- Paginated history retrieval
+- Historical shipment analysis
+- Report generation from saved predictions
+- Persistent storage of prediction outcomes
+
+Endpoint:
+
+```http
+GET /history?page=1
+```
+
+---
+
+## Transport Mode Comparison Engine
+
+For every shipment request, SupplyPrescript evaluates all available transport modes:
+
+- Air
+- Road
+- Rail
+- Sea
+
+For each mode, the system predicts:
+
+- Disruption Risk Probability
+- Lead Time
+- Estimated Transportation Cost
+
+A weighted scoring model is used to determine the optimal transport strategy.
+
+Scoring Weights:
+
+| Factor | Weight |
+|----------|---------|
+| Lead Time | 45% |
+| Cost | 30% |
+| Risk Probability | 25% |
+
+Outputs:
+
+- Recommended Transport Mode
+- Fastest Mode
+- Cheapest Mode
+- Lowest Risk Mode
+- Recommendation Explanation
+
+This enables users to compare transportation options and make data-driven logistics decisions.
+
+---
+
+## Automated PDF Reporting
+
+SupplyPrescript can generate professional PDF reports for previously saved shipment predictions.
+
+Report Contents:
+
+- Shipment Information
+- Risk Assessment
+- Lead Time Analysis
+- AI Recommendations
+- Transport Mode Comparison
+- Recommended Transport Strategy
+
+Benefits:
+
+- Easy sharing with stakeholders
+- Operational documentation
+- Decision support records
+- Historical shipment reporting
+
+Endpoint:
+
+```http
+GET /report/{prediction_id}
+```
+
+---
+
 ## Technology Stack
 
 ### Programming
@@ -421,7 +650,8 @@ Displays:
 ### Machine Learning
 
 - Scikit-Learn
-- XGBoost
+- Random Forest Classifier
+- Random Forest Regressor
 - Joblib
 
 ### Data Processing
@@ -429,11 +659,10 @@ Displays:
 - Pandas
 - NumPy
 
-### Visualization
+### Visualization & Analysis
 
 - Matplotlib
 - Seaborn
-- Plotly
 
 ### Dashboard
 
@@ -445,6 +674,14 @@ Displays:
 - VS Code
 - Git
 - GitHub
+
+### Database
+
+- PostgreSQL
+
+### Reporting
+
+- ReportLab
 
 ---
 
@@ -489,7 +726,7 @@ pip install -r requirements.txt
 
 ```bash
 cd api
-uvicorn app:app --reload
+uvicorn app:app
 ```
 
 API Documentation:

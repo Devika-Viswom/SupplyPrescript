@@ -1,16 +1,14 @@
 # API
 
-## Overview
+This folder contains the FastAPI backend for SupplyPrescript.
 
-This folder contains the FastAPI backend powering the SupplyPrescript application.
+The API provides shipment risk prediction, lead time estimation, transport mode recommendations, dashboard analytics, insights, prediction history management, and PDF report generation.
 
-The API handles:
+---
 
-- Input validation
-- Feature preparation
-- Prediction generation
-- Recommendation generation
-- Dashboard data services
+## Architecture
+
+Input Shipment Data → Prediction Engine → ML Models → Risk Assessment → Recommendations → Mode Comparison → History Storage → Dashboard / Insights / Reports
 
 ---
 
@@ -18,80 +16,243 @@ The API handles:
 
 ### app.py
 
-Main prediction API.
+Main FastAPI application.
 
-Responsibilities:
+Exposes all API endpoints:
 
-- Load models
-- Receive requests
-- Generate predictions
-- Return recommendations
+#### Prediction
+- POST `/predict`
+  - Predict disruption risk
+  - Predict lead time
+  - Generate recommendations
+  - Compare transport modes
+
+#### Dashboard
+- GET `/dashboard/summary`
+- GET `/dashboard/charts`
+- GET `/dashboard/shipments`
+
+#### Insights
+- GET `/insights/weather_risks`
+- GET `/insights/dataset`
+- GET `/insights/disruption_classifier`
+- GET `/insights/leadtime_regressor`
+
+#### History
+- GET `/history`
+
+#### Reports
+- GET `/report/{prediction_id}`
 
 ---
 
 ### schemas.py
 
-Pydantic request schemas.
+Defines request schemas using Pydantic.
+
+#### ShipmentInput
+
+Required shipment fields:
+
+- shipment_date
+- origin_port
+- destination_port
+- transport_mode
+- product_category
+- distance_km
+- weight_mt
+- fuel_price_index
+- geopolitical_risk_score
+- weather_condition
+- carrier_reliability_score
+
+---
+
+### prediction.py
+
+Core prediction engine.
 
 Responsibilities:
 
-- Input validation
-- Data type enforcement
+- Build model input features
+- Generate disruption predictions
+- Generate lead time predictions
+- Calculate confidence scores
+- Compare transport modes
+- Estimate shipping costs
+- Select recommended transport mode
+- Save prediction history
+
+Uses:
+- disruption_pipeline.pkl
+- leadtime_pipeline.pkl
 
 ---
 
 ### recommendation_engine.py
 
-Business rule engine.
+Generates prescriptive recommendations.
 
-Responsibilities:
+Calculates:
 
-- Generate mitigation strategies
-- Create actionable recommendations
+#### Risk Levels
+
+| Probability | Level |
+|------------|---------|
+| < 40% | Low |
+| 40–70% | Medium |
+| 70–95% | High |
+| > 95% | Critical |
+
+#### Delay Categories
+
+| Lead Time | Category |
+|------------|------------|
+| < 8 Days | Short |
+| 8–21 Days | Moderate |
+| 21–40 Days | Long |
+| > 40 Days | Severe |
+
+Produces operational recommendations based on:
+
+- Weather conditions
+- Geopolitical risk
+- Carrier reliability
+- Lead time
+- Transport mode
 
 ---
 
 ### dashboard.py
 
-Dashboard data provider.
+Provides dashboard analytics from the processed dataset.
 
-Responsibilities:
+Available Metrics:
 
-- KPI calculations
-- Summary statistics
-- Dashboard visualizations
+#### Summary KPIs
+- Total Shipments
+- Average Lead Time
+- Disruption Rate
+- Average Risk Score
+
+#### Charts
+- Lead Time by Transport Mode
+- Disruption Rate by Weather
+- Monthly Shipment Volume
+- Route Distribution
+
+#### Tables
+- Recent Shipments
 
 ---
 
 ### insights.py
 
-Insights generation module.
+Provides analytical and model-performance insights.
+
+Available Insights:
+
+#### Dataset Insights
+- Total shipments
+- Average lead time
+- Disruption rate
+
+#### Weather Risk Analysis
+- Disruption percentage by weather condition
+
+#### Disruption Model Metrics
+- Accuracy
+- Precision
+- Recall
+- F1 Score
+
+#### Lead Time Model Metrics
+- MAE
+- RMSE
+- R² Score
+
+---
+
+### db.py
+
+Database connection module.
+
+Database:
+- PostgreSQL
+
+Responsibilities:
+- Load environment variables
+- Establish database connection
+- Manage prediction history storage
+
+Table:
+- prediction_history
+
+---
+
+### history.py
+
+Stores prediction results.
 
 Responsibilities:
 
-- Model insights
-- Feature importance reporting
-- Dataset statistics
+- Save shipment inputs
+- Save prediction outputs
+- Save recommendations
+- Save transport comparisons
+
+Target Table:
+- prediction_history
 
 ---
 
-## Main Endpoint
+### history_service.py
 
-### POST /predict
+Retrieves prediction history from the database.
 
-Returns:
+Features:
 
-- Disruption Prediction
-- Risk Probability
-- Risk Level
-- Predicted Lead Time
-- Delay Category
-- Recommendations
+- Paginated history retrieval
+- Fetch prediction by ID
+- Return full prediction details
+
+Default Page Size:
+- 50 records
 
 ---
 
-## Run API
+### report.py
 
-```bash
-cd .\api\
-python -m uvicorn app:app --reload
+Generates PDF reports for saved predictions.
+
+Report Sections:
+
+1. Shipment Information
+2. Risk Assessment
+3. Lead Time Analysis
+4. Recommendations
+5. Transport Mode Comparison
+6. Mode Recommendation
+
+Output:
+- Downloadable PDF report
+
+---
+
+## Dependencies
+
+Key Libraries:
+
+- FastAPI
+- Pydantic
+- Pandas
+- Scikit-Learn
+- Joblib
+- PostgreSQL (psycopg2)
+- ReportLab
+
+---
+
+## API Purpose
+
+The API serves as the operational layer of SupplyPrescript by transforming shipment information into actionable supply chain decisions through machine learning predictions, risk analysis, transport recommendations, and reporting.
