@@ -1,4 +1,4 @@
-from db import conn
+from connection import conn
 
 def get_prediction_history(page):
 
