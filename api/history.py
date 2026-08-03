@@ -86,6 +86,12 @@ def save_prediction(
 
         conn.commit()
 
+    except Exception as e:
+
+        conn.rollback()
+        print("DATABASE ERROR:", e)
+        raise
+
     finally:
 
         cursor.close()
