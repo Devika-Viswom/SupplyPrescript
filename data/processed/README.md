@@ -53,50 +53,6 @@ Base dataset for all model pipelines.
 
 ---
 
-### df_classification_encoded.pkl
-
-Purpose:
-Machine learning dataset for disruption prediction.
-
-Target:
-Disruption_Occurred
-
-Encoding:
-One-hot encoding with drop_first=True.
-
-Shape:
-5000 rows × 87 columns
-
-Used By:
-Disruption Classification Model
-
-Output:
-Probability of shipment disruption.
-
----
-
-### df_regression_encoded.pkl
-
-Purpose:
-Machine learning dataset for lead time prediction.
-
-Target:
-Lead_Time_Days
-
-Encoding:
-One-hot encoding with drop_first=True.
-
-Shape:
-5000 rows × 87 columns
-
-Used By:
-Lead Time Regression Model
-
-Output:
-Predicted shipment lead time.
-
----
-
 ## Feature Categories
 
 Numerical Features:

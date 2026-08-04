@@ -31,19 +31,19 @@ app = FastAPI(
     title="SupplyPrescript API"
 )
 
-@app.post("/predict")
+@app.post("/api/predict")
 def predict(data: ShipmentInput):
 
     return predict_shipment(data)
 
 
-@app.get("/dashboard/summary")
+@app.get("/api/dashboard/summary")
 def dashboard_summary():
 
     return get_summary()
 
 
-@app.get("/dashboard/charts")
+@app.get("/api/dashboard/charts")
 def dashboard_charts():
 
     return {
@@ -61,13 +61,13 @@ def dashboard_charts():
     }
 
 
-@app.get("/dashboard/shipments")
+@app.get("/api/dashboard/shipments")
 def dashboard_shipments():
 
     return get_recent_shipments()
 
 
-@app.get("/insights/weather_risks")
+@app.get("/api/insights/weather_risks")
 def insights_weather_risks():
 
     return {
@@ -75,7 +75,7 @@ def insights_weather_risks():
     }
 
 
-@app.get("/insights/dataset")
+@app.get("/api/insights/dataset")
 def insights_dataset():
 
     return {
@@ -83,7 +83,7 @@ def insights_dataset():
     }
 
 
-@app.get("/insights/disruption_classifier")
+@app.get("/api/insights/disruption_classifier")
 def insights_disruption_classifier():
 
     return {
@@ -92,7 +92,7 @@ def insights_disruption_classifier():
     }
 
 
-@app.get("/insights/leadtime_regressor")
+@app.get("/api/insights/leadtime_regressor")
 def insights_leadtime_regressor():
 
     return {
@@ -100,7 +100,7 @@ def insights_leadtime_regressor():
             get_leadtime_regressor_insights()
     }
 
-@app.get("/history")
+@app.get("/api/history")
 def get_history(page: int = 1):
 
     data=get_prediction_history(page=page)
@@ -111,7 +111,7 @@ def get_history(page: int = 1):
         "records": data
     }
 
-@app.get("/report/{prediction_id}")
+@app.get("/api/report/{prediction_id}")
 def get_report(prediction_id: int):
 
     record = get_prediction_by_id(prediction_id)
