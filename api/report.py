@@ -206,9 +206,10 @@ def generate_pdf_report(record):
         )
     )
 
-    recommendations = json.loads(
-        record["recommendations"]
-    )
+    recommendations = record["recommendations"]
+
+    if isinstance(recommendations, str):
+        recommendations = json.loads(recommendations)
 
     for item in recommendations:
 
@@ -231,10 +232,11 @@ def generate_pdf_report(record):
             styles["Heading1"]
         )
     )
+    
+    comparison = record["comparison_json"]
 
-    comparison = json.loads(
-        record["comparison_json"]
-    )
+    if isinstance(comparison, str):
+        comparison = json.loads(comparison)
 
     comparison_rows = [[
         "Mode",

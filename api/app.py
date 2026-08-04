@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.responses import StreamingResponse
+from fastapi.middleware.cors import CORSMiddleware
 
 from schemas import ShipmentInput
 
@@ -27,8 +28,14 @@ from history_service import (
 
 from report import generate_pdf_report
 
-app = FastAPI(
-    title="SupplyPrescript API"
+app = FastAPI(title="SupplyPrescript API")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 @app.post("/api/predict")
@@ -107,7 +114,7 @@ def get_history(page: int = 1):
 
     return {
         "page": page,
-        "page_size": 50,
+        "page_size": len(data),
         "records": data
     }
 

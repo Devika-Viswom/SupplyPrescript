@@ -66,7 +66,7 @@ def get_prediction_results(data):
 
     input_df = build_input_df(data)
 
-    disruption_prediction = int(
+    disruption_prediction = bool(
         clf_model.predict(input_df)[0]
     )
 
