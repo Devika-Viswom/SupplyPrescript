@@ -1,5 +1,6 @@
 import { useState } from "react";
 import api from "../api/api";
+import PredictionResult from "../components/PredictionResult";
 
 export default function Predict() {
 
@@ -147,9 +148,68 @@ export default function Predict() {
 
           <h2>Prediction Result</h2>
 
-          <pre>
-            {JSON.stringify(result, null, 2)}
-          </pre>
+          <PredictionResult result={result} />
+
+          <div className="bg-white mt-4 p-4 rounded shadow">
+
+            <h2 className="font-bold mb-2">
+              Recommendations
+            </h2>
+
+            <ul>
+
+              {result.prediction.recommendations.map((r,index)=>(
+                <li key={index}>• {r}</li>
+              ))}
+
+            </ul>
+
+          </div>
+
+          <div className="bg-white mt-4 p-4 rounded shadow">
+
+            <h2 className="font-bold mb-4">
+              Transport Mode Comparison
+            </h2>
+
+            <table className="w-full">
+
+              <thead>
+
+                <tr>
+
+                  <th>Mode</th>
+                  <th>Risk %</th>
+                  <th>Lead Time</th>
+                  <th>Cost</th>
+
+                </tr>
+
+              </thead>
+
+              <tbody>
+
+                {result.comparison.modes.map((mode,index)=>(
+
+                  <tr key={index}>
+
+                    <td>{mode.mode}</td>
+
+                    <td>{mode.risk_probability}</td>
+
+                    <td>{mode.predicted_lead_time}</td>
+
+                    <td>${mode.estimated_cost}</td>
+
+                  </tr>
+
+                ))}
+
+              </tbody>
+
+            </table>
+
+          </div>
 
         </div>
 
