@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 export default function Navbar() {
   return (
@@ -10,13 +10,49 @@ export default function Navbar() {
 
       <div className="flex gap-6">
 
-        <Link to="/">Dashboard</Link>
+        <NavLink
+          to="/"
+          className={({ isActive }) =>
+            isActive
+              ? "text-blue-400 font-semibold"
+              : "text-white"
+          }
+        >
+          Dashboard
+        </NavLink>
 
-        <Link to="/predict">Predict</Link>
+        <NavLink
+          to="/predict"
+          className={({ isActive }) =>
+            isActive
+              ? "text-blue-400 font-semibold"
+              : "text-white"
+          }
+        >
+          Predict
+        </NavLink>
 
-        <Link to="/history">History</Link>
+        <NavLink
+          to="/history"
+          className={({ isActive }) =>
+            isActive
+              ? "text-blue-400 font-semibold"
+              : "text-white"
+          }
+        >
+          History
+        </NavLink>
 
-        <Link to="/insights">Insights</Link>
+        <NavLink
+          to="/insights"
+          className={({ isActive }) =>
+            isActive
+              ? "text-blue-400 font-semibold"
+              : "text-white"
+          }
+        >
+          Insights
+        </NavLink>
 
       </div>
 

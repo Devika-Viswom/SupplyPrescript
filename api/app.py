@@ -8,10 +8,15 @@ from prediction import predict_shipment
 
 from dashboard import (
     get_summary,
-    get_leadtime_by_mode,
+    get_monthly_disruptions,
+    get_monthly_leadtime,
+    get_riskiest_routes,
+    get_risk_distribution,
+    get_reliability_distribution,
+    get_leadtime_by_weather,
+    get_distance_mode_analysis,
+    get_top_routes,
     get_disruption_by_weather,
-    get_monthly_shipments,
-    get_route_distribution,
     get_recent_shipments
 )
 from insights import (
@@ -44,8 +49,8 @@ def predict(data: ShipmentInput):
     return predict_shipment(data)
 
 
-@app.get("/api/dashboard/summary")
-def dashboard_summary():
+@app.get("/api/dashboard/kpi")
+def dashboard_kpi():
 
     return get_summary()
 
@@ -54,17 +59,32 @@ def dashboard_summary():
 def dashboard_charts():
 
     return {
-        "lead_time_by_mode":
-            get_leadtime_by_mode(),
+        "monthly_disruptions":
+            get_monthly_disruptions(),
+
+        "monthly_leadtime":
+            get_monthly_leadtime(),
+
+        "riskiest_routes":
+            get_riskiest_routes(),
+
+        "risk_distribution":
+            get_risk_distribution(),
+
+        "reliability_distribution":
+            get_reliability_distribution(),
+
+        "leadtime_by_weather":
+            get_leadtime_by_weather(),
+
+        "distance_mode_analysis":
+            get_distance_mode_analysis(),
+
+        "top_routes":
+            get_top_routes(),
 
         "disruption_by_weather":
-            get_disruption_by_weather(),
-
-        "monthly_shipments":
-            get_monthly_shipments(),
-
-        "route_distribution":
-            get_route_distribution()
+            get_disruption_by_weather()
     }
 
 

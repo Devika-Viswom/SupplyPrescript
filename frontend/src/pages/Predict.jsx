@@ -3,7 +3,6 @@ import api from "../api/api";
 import PredictionResult from "../components/PredictionResult";
 
 export default function Predict() {
-
   const [formData, setFormData] = useState({
     shipment_date: "",
     origin_port: "",
@@ -22,22 +21,22 @@ export default function Predict() {
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
-
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
-
   };
 
-  const handleSubmit = async (e) => {
+  const isFormValid = Object.values(formData).every(
+    value => value !== ""
+  );
 
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     setLoading(true);
 
     try {
-
       const response = await api.post(
         "/predict",
         formData
@@ -46,174 +45,179 @@ export default function Predict() {
       setResult(response.data);
 
     } catch (err) {
-
-      console.error("FULL ERROR:", err);
-
-      if (err.response) {
-        console.log("Response:", err.response.data);
-        console.log("Status:", err.response.status);
-      }
-      
+      console.error(err);
       alert("Prediction failed");
-
     }
 
     setLoading(false);
   };
 
   return (
-    <div>
+    <div className="flex justify-center py-10 px-4">
 
-      <h1>Shipment Prediction</h1>
+      <div className="bg-white shadow-xl rounded-xl p-8 w-full max-w-5xl">
 
-      <form onSubmit={handleSubmit}>
+        <div className="text-center mb-8">
 
-        <input
-          name="shipment_date"
-          type="date"
-          onChange={handleChange}
-        />
+          <h1 className="text-4xl font-bold">
+            Supply Chain Risk Prediction
+          </h1>
 
-        <input
-          name="origin_port"
-          placeholder="Origin Port"
-          onChange={handleChange}
-        />
-
-        <input
-          name="destination_port"
-          placeholder="Destination Port"
-          onChange={handleChange}
-        />
-
-        <input
-          name="transport_mode"
-          placeholder="Transport Mode"
-          onChange={handleChange}
-        />
-
-        <input
-          name="product_category"
-          placeholder="Product Category"
-          onChange={handleChange}
-        />
-
-        <input
-          name="distance_km"
-          placeholder="Distance KM"
-          onChange={handleChange}
-        />
-
-        <input
-          name="weight_mt"
-          placeholder="Weight MT"
-          onChange={handleChange}
-        />
-
-        <input
-          name="fuel_price_index"
-          placeholder="Fuel Price Index"
-          onChange={handleChange}
-        />
-
-        <input
-          name="geopolitical_risk_score"
-          placeholder="Risk Score"
-          onChange={handleChange}
-        />
-
-        <input
-          name="weather_condition"
-          placeholder="Weather"
-          onChange={handleChange}
-        />
-
-        <input
-          name="carrier_reliability_score"
-          placeholder="Reliability Score"
-          onChange={handleChange}
-        />
-
-        <button type="submit">
-
-          {loading ? "Predicting..." : "Predict"}
-
-        </button>
-
-      </form>
-
-      {result && (
-
-        <div>
-
-          <h2>Prediction Result</h2>
-
-          <PredictionResult result={result} />
-
-          <div className="bg-white mt-4 p-4 rounded shadow">
-
-            <h2 className="font-bold mb-2">
-              Recommendations
-            </h2>
-
-            <ul>
-
-              {result.prediction.recommendations.map((r,index)=>(
-                <li key={index}>• {r}</li>
-              ))}
-
-            </ul>
-
-          </div>
-
-          <div className="bg-white mt-4 p-4 rounded shadow">
-
-            <h2 className="font-bold mb-4">
-              Transport Mode Comparison
-            </h2>
-
-            <table className="w-full">
-
-              <thead>
-
-                <tr>
-
-                  <th>Mode</th>
-                  <th>Risk %</th>
-                  <th>Lead Time</th>
-                  <th>Cost</th>
-
-                </tr>
-
-              </thead>
-
-              <tbody>
-
-                {result.comparison.modes.map((mode,index)=>(
-
-                  <tr key={index}>
-
-                    <td>{mode.mode}</td>
-
-                    <td>{mode.risk_probability}</td>
-
-                    <td>{mode.predicted_lead_time}</td>
-
-                    <td>${mode.estimated_cost}</td>
-
-                  </tr>
-
-                ))}
-
-              </tbody>
-
-            </table>
-
-          </div>
+          <p className="text-gray-500 mt-2">
+            Predict disruption risk, lead time and recommended transport mode
+          </p>
 
         </div>
 
-      )}
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-4"
+        >
+
+          <input
+            type="date"
+            name="shipment_date"
+            onChange={handleChange}
+            className="w-full border rounded-lg p-3"
+          />
+
+          <select
+            name="origin_port"
+            onChange={handleChange}
+            className="w-full border rounded-lg p-3"
+          >
+            <option value="">Origin Port</option>
+            <option>Singapore</option>
+            <option>Rotterdam</option>
+            <option>Busan</option>
+            <option>Shanghai</option>
+            <option>Dubai</option>
+            <option>Los Angeles</option>
+            <option>Hamburg</option>
+            <option>Antwerp</option>
+          </select>
+
+          <select
+            name="destination_port"
+            onChange={handleChange}
+            className="w-full border rounded-lg p-3"
+          >
+            <option value="">Destination Port</option>
+            <option>Singapore</option>
+            <option>Rotterdam</option>
+            <option>Busan</option>
+            <option>Shanghai</option>
+            <option>Dubai</option>
+            <option>Los Angeles</option>
+            <option>Hamburg</option>
+            <option>Antwerp</option>
+            <option>Marseille</option>
+          </select>
+
+          <select
+            name="transport_mode"
+            onChange={handleChange}
+            className="w-full border rounded-lg p-3"
+          >
+            <option value="">Transport Mode</option>
+            <option>Air</option>
+            <option>Road</option>
+            <option>Rail</option>
+            <option>Sea</option>
+          </select>
+
+          <select
+            name="product_category"
+            onChange={handleChange}
+            className="w-full border rounded-lg p-3"
+          >
+            <option value="">Product Category</option>
+            <option>Electronics</option>
+            <option>Automotive</option>
+            <option>Pharmaceuticals</option>
+            <option>Food</option>
+            <option>Industrial Equipment</option>
+          </select>
+
+          <input
+            type="number"
+            name="distance_km"
+            placeholder="Distance (KM)"
+            onChange={handleChange}
+            className="w-full border rounded-lg p-3"
+          />
+
+          <input
+            type="number"
+            name="weight_mt"
+            placeholder="Weight (MT)"
+            onChange={handleChange}
+            className="w-full border rounded-lg p-3"
+          />
+
+          <input
+            type="number"
+            step="0.01"
+            name="fuel_price_index"
+            placeholder="Fuel Price Index"
+            onChange={handleChange}
+            className="w-full border rounded-lg p-3"
+          />
+
+          <input
+            type="number"
+            step="0.01"
+            name="geopolitical_risk_score"
+            placeholder="Geopolitical Risk Score"
+            onChange={handleChange}
+            className="w-full border rounded-lg p-3"
+          />
+
+          <select
+            name="weather_condition"
+            onChange={handleChange}
+            className="w-full border rounded-lg p-3"
+          >
+            <option value="">Weather Condition</option>
+            <option>Clear</option>
+            <option>Rain</option>
+            <option>Fog</option>
+            <option>Storm</option>
+            <option>Hurricane</option>
+          </select>
+
+          <input
+            type="number"
+            step="0.01"
+            name="carrier_reliability_score"
+            placeholder="Carrier Reliability Score"
+            onChange={handleChange}
+            className="w-full border rounded-lg p-3"
+          />
+
+          <button
+            type="submit"
+            disabled={!isFormValid || loading}
+            className={`w-full p-3 rounded-lg font-semibold transition-all duration-300
+              ${
+                isFormValid
+                  ? "bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-300"
+                  : "bg-gray-300 text-gray-500 cursor-not-allowed"
+              }
+            `}
+          >
+            {loading ? "Predicting..." : "Predict Shipment"}
+          </button>
+
+        </form>
+
+        {result && (
+          <div className="mt-8">
+            <PredictionResult result={result} />
+          </div>
+        )}
+
+      </div>
 
     </div>
   );
