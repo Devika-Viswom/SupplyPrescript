@@ -270,7 +270,7 @@ Random Forest Classifier
 
 ---
 
-### Model 2: Lead Time Prediction
+### Model 2: Lead Time Predictions
 
 #### Objective
 
