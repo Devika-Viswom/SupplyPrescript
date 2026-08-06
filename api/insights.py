@@ -9,6 +9,7 @@ from sklearn.metrics import (
     precision_score,
     recall_score,
     f1_score,
+    confusion_matrix,
     mean_absolute_error,
     mean_squared_error,
     r2_score
@@ -22,47 +23,36 @@ reg_model = joblib.load(BASE_DIR.parent / "models" / "leadtime_pipeline.pkl")
 
 df = pd.read_pickle(BASE_DIR.parent / "data" / "processed" / "df_final.pkl")
 
-def get_top_weather_risks():
+def get_business_insights():
 
-    weather_risk = (
-        df.groupby(
-            "Weather_Condition"
-        )["Disruption_Occurred"]
+    weather = (
+        df.groupby("Weather_Condition")
+        ["Disruption_Occurred"]
         .mean()
-        .sort_values(
-            ascending=False
-        )
-        * 100
-    ).round(2)
-
-    return weather_risk.to_dict()
-
-
-def get_dataset_insights():
-
-    disruption_rate = round(
-        df["Disruption_Occurred"].mean() * 100,
-        2
+        .mul(100)
+        .idxmax()
     )
 
-    avg_lead_time = round(
-        df["Lead_Time_Days"].mean(),
-        2
+    mode = (
+        df.groupby("Transport_Mode")
+        ["Lead_Time_Days"]
+        .mean()
+        .idxmax()
     )
 
-    total_shipments = len(df)
+    best_mode = (
+        df.groupby("Transport_Mode")
+        ["Lead_Time_Days"]
+        .mean()
+        .idxmin()
+    )
 
-    return {
-
-        "total_shipments":
-            total_shipments,
-
-        "avg_lead_time":
-            avg_lead_time,
-
-        "disruption_rate":
-            disruption_rate
-    }
+    return [
+        f"{weather} weather causes the highest disruption risk.",
+        f"{mode} transport has the longest average lead time.",
+        f"{best_mode} transport has the shortest average lead time.",
+        "Carrier reliability significantly impacts disruptions."
+    ]
 
 
 def get_disruption_classifier_insights():
@@ -86,6 +76,21 @@ def get_disruption_classifier_insights():
 
     y_pred = clf_model.predict(X_test)
 
+    probs = clf_model.predict_proba(X_test)[:, 1]
+
+    confidence = (probs.max() * 100).round(2)
+
+    bins = pd.cut(
+        confidence,
+        bins=[0, 70, 80, 90, 100],
+        labels=["0-70", "70-80", "80-90", "90-100"]
+    )
+
+    tn, fp, fn, tp = confusion_matrix(
+        y_test,
+        y_pred
+    ).ravel()
+
     accuracy = accuracy_score(
         y_test,
         y_pred
@@ -105,6 +110,22 @@ def get_disruption_classifier_insights():
         y_test,
         y_pred
     )
+
+    feature_importance = pd.DataFrame({
+        "Feature": X_train.columns,
+        "Importance": clf_model.named_steps["model"].feature_importances_
+    })
+    
+    feature_importance = feature_importance.sort_values(
+        by="Importance",
+        ascending=False
+    )
+    
+    feature_importance = feature_importance.head(10)
+    
+    feature_importance["Importance"] = (
+        feature_importance["Importance"] * 100
+    ).round(2)
 
     return {
 
@@ -132,9 +153,30 @@ def get_disruption_classifier_insights():
             ),
 
         "f1_score":
-                round(
+            round(
                 f1 * 100,
                 2
+            ),
+
+        "confusion_matrix":
+            {
+                "true_negatives": int(tn),
+                "false_positives": int(fp),
+                "false_negatives": int(fn),
+                "true_positives": int(tp)
+            },
+
+        "confidence_distribution":
+            (
+                pd.Series(bins)
+                    .value_counts()
+                    .sort_index()
+                    .to_dict()
+            ),
+
+        "top_features":
+            feature_importance.to_dict(
+                orient="records"
             )
     }
 
@@ -179,6 +221,22 @@ def get_leadtime_regressor_insights():
         lead_pred
     )
 
+    feature_importance = pd.DataFrame({
+        "Feature": X_train_r.columns,
+        "Importance": reg_model.named_steps["model"].feature_importances_
+    })
+
+    feature_importance = feature_importance.sort_values(
+        by="Importance",
+        ascending=False
+    )
+
+    feature_importance = feature_importance.head(10)
+
+    feature_importance["Importance"] = (
+        feature_importance["Importance"] * 100
+    ).round(2)
+
     return {
 
         "model":
@@ -202,5 +260,23 @@ def get_leadtime_regressor_insights():
             round(
                 r2,
                 4
+            ),
+
+        "top_features":
+            feature_importance.to_dict(
+                orient="records"
             )
     }
+
+
+def get_recommendation_insights():
+
+    recommendations = [
+        "Use Air transport for high-priority shipments.",
+        "Avoid Sea transport during severe weather conditions.",
+        "Prefer high reliability carriers for long routes.",
+        "Monitor geopolitical risk scores above 7 carefully.",
+        "Consider alternate routes when disruption probability is high."
+    ]
+
+    return recommendations

@@ -20,10 +20,10 @@ from dashboard import (
     get_recent_shipments
 )
 from insights import (
-    get_top_weather_risks,
-    get_dataset_insights,
+    get_business_insights,
     get_disruption_classifier_insights,
-    get_leadtime_regressor_insights
+    get_leadtime_regressor_insights,
+    get_recommendation_insights
 )
 
 from history_service import (
@@ -94,19 +94,11 @@ def dashboard_shipments():
     return get_recent_shipments()
 
 
-@app.get("/api/insights/weather_risks")
-def insights_weather_risks():
+@app.get("/api/insights/business")
+def insights_business():
 
     return {
-        "top_weather_risks": get_top_weather_risks()
-    }
-
-
-@app.get("/api/insights/dataset")
-def insights_dataset():
-
-    return {
-        "dataset_insights": get_dataset_insights()
+        "business_insights": get_business_insights()
     }
 
 
@@ -127,6 +119,16 @@ def insights_leadtime_regressor():
             get_leadtime_regressor_insights()
     }
 
+
+@app.get("/api/insights/recommendations")
+def insights_recommendations():
+
+    return {
+        "recommendation_insights":
+            get_recommendation_insights()
+    }
+
+
 @app.get("/api/history")
 def get_history(page: int = 1):
 
@@ -137,6 +139,7 @@ def get_history(page: int = 1):
         "page_size": len(data),
         "records": data
     }
+
 
 @app.get("/api/report/{prediction_id}")
 def get_report(prediction_id: int):
