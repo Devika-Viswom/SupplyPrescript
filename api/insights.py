@@ -78,12 +78,12 @@ def get_disruption_classifier_insights():
 
     probs = clf_model.predict_proba(X_test)[:, 1]
 
-    confidence = (probs.max() * 100).round(2)
+    confidence = (probs * 100).round(2)
 
     bins = pd.cut(
         confidence,
-        bins=[0, 70, 80, 90, 100],
-        labels=["0-70", "70-80", "80-90", "90-100"]
+        bins=[0, 50, 70, 90, 100],
+        labels=["0-50", "50-70", "70-90", "90-100"]
     )
 
     tn, fp, fn, tp = confusion_matrix(
@@ -112,9 +112,16 @@ def get_disruption_classifier_insights():
     )
 
     feature_importance = pd.DataFrame({
-        "Feature": X_train.columns,
+        "Feature": clf_model.named_steps["preprocessor"].get_feature_names_out(),
         "Importance": clf_model.named_steps["model"].feature_importances_
     })
+
+    feature_importance["Feature"] = (
+        feature_importance["Feature"]
+            .str.replace("cat__", "", regex=False)
+            .str.replace("remainder__", "", regex=False)
+            .str.replace("_", " ", regex=False)
+    )
     
     feature_importance = feature_importance.sort_values(
         by="Importance",
@@ -222,9 +229,16 @@ def get_leadtime_regressor_insights():
     )
 
     feature_importance = pd.DataFrame({
-        "Feature": X_train_r.columns,
+        "Feature": reg_model.named_steps["preprocessor"].get_feature_names_out(),
         "Importance": reg_model.named_steps["model"].feature_importances_
     })
+
+    feature_importance["Feature"] = (
+        feature_importance["Feature"]
+            .str.replace("cat__", "", regex=False)
+            .str.replace("remainder__", "", regex=False)
+            .str.replace("_", " ", regex=False)
+    )
 
     feature_importance = feature_importance.sort_values(
         by="Importance",
