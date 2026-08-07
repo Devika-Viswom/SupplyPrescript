@@ -88,7 +88,7 @@ export default function History() {
               </th>
 
               <th className="p-4 text-left">
-                Actions
+                Details
               </th>
 
               <th className="p-4 text-left">
@@ -222,6 +222,8 @@ export default function History() {
 
       </div>
 
+      {/* Modal for Selected Record */}
+
       {
         selectedRecord && (
 
@@ -229,22 +231,48 @@ export default function History() {
 
           <div className="bg-white rounded-xl w-[900px] max-h-[90vh] overflow-auto p-8">
 
-            <div className="flex justify-between mb-6">
+            <div className="flex justify-between items-start mb-8">
 
-              <h2 className="text-3xl font-bold">
+              <div>
+
+                <h2 className="text-3xl font-bold">
                 Prediction Details
-              </h2>
+                </h2>
+
+                <div className="text-gray-500 mt-2">
+
+                  <div>
+                    <b>ID:</b> {selectedRecord.id}
+                  </div>
+
+                  <div>
+                    <b>Prediction Time:</b>{" "}
+                    {new Date(selectedRecord.created_at).toLocaleString()}
+                  </div>
+
+                </div>
+
+              </div>
 
               <button
                 onClick={() => setSelectedRecord(null)}
-                className="text-red-500 font-bold"
+                className="text-red-500 font-bold text-xl"
               >
-                X
+                ✕
               </button>
 
             </div>
 
-            <div className="grid grid-cols-2 gap-4 mb-6">
+            <h3 className="text-xl font-bold mb-4 border-b pb-2">
+              Shipment Details
+            </h3>
+
+            <div className="grid grid-cols-2 gap-4 mb-8">
+
+              <div>
+                <b>Shipment Date:</b>{" "}
+                {selectedRecord.shipment_date}
+              </div>
 
               <div>
                 <b>Route:</b>
@@ -261,9 +289,56 @@ export default function History() {
               </div>
 
               <div>
-                <b>Risk:</b>
-                {" "}
-                {selectedRecord.risk_probability}%
+                <b>Product Category:</b>{" "}
+                {selectedRecord.product_category}
+              </div>
+
+              <div>
+                <b>Distance:</b>{" "}
+                {selectedRecord.distance_km} km
+              </div>
+
+              <div>
+                <b>Weight:</b>{" "}
+                {selectedRecord.weight_mt} MT
+              </div>
+
+              <div>
+                <b>Fuel Price Index:</b>{" "}
+                {selectedRecord.fuel_price_index}
+              </div>
+
+              <div>
+                <b>Geopolitical Risk:</b>{" "}
+                {selectedRecord.geopolitical_risk_score}
+              </div>
+
+              <div>
+                <b>Carrier Reliability:</b>{" "}
+                {selectedRecord.carrier_reliability_score}
+              </div>
+
+              <div>
+                <b>Weather:</b>{" "}
+                {selectedRecord.weather_condition}
+              </div>
+            
+            </div>
+
+            <h3 className="text-xl font-bold mb-4 border-b pb-2">
+              Prediction
+            </h3>
+
+            <div className="grid grid-cols-2 gap-4 mb-8">
+
+              <div>
+                <b>Disruption Prediction:</b>{" "}
+                {selectedRecord.disruption_prediction ? "Yes" : "No"}
+              </div>
+
+              <div>
+                <b>Risk Level:</b>{" "}
+                {selectedRecord.risk_level}
               </div>
 
               <div>
@@ -273,21 +348,21 @@ export default function History() {
               </div>
 
               <div>
-                <b>Lead Time:</b>
+                <b>Predicted Lead Time:</b>
                 {" "}
                 {selectedRecord.predicted_lead_time}
                 {" "}Days
               </div>
 
               <div>
-                <b>Delay:</b>
+                <b>Delay Category:</b>
                 {" "}
                 {selectedRecord.delay_category}
               </div>
               
             </div>
 
-            <h3 className="text-xl font-bold mb-3">
+            <h3 className="text-xl font-bold mb-3 border-b pb-2">
             Recommendations
             </h3>
 
@@ -296,14 +371,14 @@ export default function History() {
               {selectedRecord.recommendations.map((r,i) => (
 
                 <li key={i}>
-                ✓ {r}
+                ✓{" "}{r}
                 </li>
 
               ))}
 
             </ul>
 
-            <h3 className="text-xl font-bold mb-3">
+            <h3 className="text-xl font-bold mb-3 border-b pb-2">
             Mode Comparison
             </h3>
 
@@ -335,16 +410,16 @@ export default function History() {
 
             </div>
 
-            <table className="w-full border">
+            <table className="w-full border text-center">
 
               <thead>
 
                 <tr className="bg-slate-100">
 
-                  <th>Mode</th>
-                  <th>Risk %</th>
-                  <th>Lead Time</th>
-                  <th>Cost</th>
+                  <th className="p-3">Mode</th>
+                  <th className="p-3">Risk %</th>
+                  <th className="p-3">Lead Time</th>
+                  <th className="p-3">Cost</th>
 
                 </tr>
 
@@ -354,15 +429,16 @@ export default function History() {
 
               {selectedRecord.comparison_json.map((mode) => (
 
-                <tr key={mode.mode}>
+                <tr key={mode.mode}
+                  className="border-t hover:bg-slate-50">
 
-                  <td>{mode.mode}</td>
+                  <td className="p-3">{mode.mode}</td>
 
-                  <td>{mode.risk_probability}</td>
+                  <td className="p-3">{mode.risk_probability}</td>
 
-                  <td>{mode.predicted_lead_time}</td>
+                  <td className="p-3">{mode.predicted_lead_time}</td>
 
-                  <td>${mode.estimated_cost}</td>
+                  <td className="p-3">${mode.estimated_cost}</td>
 
                 </tr>
 
