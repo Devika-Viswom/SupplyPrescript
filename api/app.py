@@ -1,12 +1,15 @@
 from fastapi import FastAPI
+from pathlib import Path
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 
-from schemas import ShipmentInput
+from api.schemas import ShipmentInput
 
-from prediction import predict_shipment
+from api.prediction import predict_shipment
 
-from dashboard import (
+from api.dashboard import (
     get_summary,
     get_monthly_disruptions,
     get_monthly_leadtime,
@@ -19,21 +22,24 @@ from dashboard import (
     get_disruption_by_weather,
     get_recent_shipments
 )
-from insights import (
+from api.insights import (
     get_business_insights,
     get_disruption_classifier_insights,
     get_leadtime_regressor_insights,
     get_recommendation_insights
 )
 
-from history_service import (
+from api.history_service import (
     get_prediction_history,
     get_prediction_by_id
 )
 
-from report import generate_pdf_report
+from api.report import generate_pdf_report
 
 app = FastAPI(title="SupplyPrescript API")
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+frontend_dist = BASE_DIR / "frontend" / "dist"
 
 app.add_middleware(
     CORSMiddleware,
@@ -159,3 +165,21 @@ def get_report(prediction_id: int):
             f"attachment; filename=SupplyPrescript_Report_{prediction_id}.pdf"
         }
     )
+
+if frontend_dist.exists():
+    app.mount(
+        "/assets",
+        StaticFiles(directory=frontend_dist / "assets"),
+        name="assets"
+    )
+
+    @app.get("/")
+    async def serve_react():
+        return FileResponse(frontend_dist / "index.html")
+
+    @app.get("/{full_path:path}")
+    async def serve_spa(full_path: str):
+        if full_path.startswith("api"):
+            return {"detail": "Not Found"}
+
+        return FileResponse(frontend_dist / "index.html")

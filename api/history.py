@@ -1,7 +1,7 @@
 import json
 from datetime import datetime
 
-from connection import conn
+from api.connection import conn
 
 def save_prediction(
     shipment,
