@@ -55,7 +55,7 @@ export default function Predict() {
   return (
     <div className="flex justify-center py-10 px-4">
 
-      <div className="bg-white shadow-xl rounded-xl p-8 w-full max-w-5xl">
+      <div className="bg-slate-50 shadow-2xl rounded-3xl p-10 w-full max-w-6xl border">
 
         <div className="text-center mb-8">
 

@@ -61,21 +61,22 @@ export default function Dashboard() {
   return (
     <div className="max-w-7xl mx-auto p-8">
 
-      <div className="mb-8">
+      <div className="mb-10 bg-gradient-to-r from-slate-900 to-blue-900 rounded-2xl p-8 text-white shadow-xl">
 
-        <h1 className="text-4xl font-bold">
-          Supply Chain Dashboard
+        <h1 className="text-4xl font-bold mb-3">
+          Supply Chain Intelligence Platform
         </h1>
 
-        <p className="text-gray-500 mt-2">
-          Real-time supply chain performance overview
+        <p className="text-blue-100 text-lg max-w-3xl">
+          Predict disruptions, estimate lead times, evaluate transport modes,
+          and generate actionable recommendations to improve supply chain resilience.
         </p>
 
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
 
-        <div className="bg-white rounded-xl shadow p-4">
+        <div className="bg-white rounded-xl shadow p-5 border-t-4 border-blue-600">
           <p className="text-gray-500">
             Total Shipments
           </p>
@@ -85,7 +86,7 @@ export default function Dashboard() {
           </h2>
         </div>
 
-        <div className="bg-white rounded-xl shadow p-4">
+        <div className="bg-white rounded-xl shadow p-4 border-t-4 border-green-600">
           <p className="text-gray-500">
             Avg Lead Time
           </p>
@@ -95,7 +96,7 @@ export default function Dashboard() {
           </h2>
         </div>
 
-        <div className="bg-white rounded-xl shadow p-4">
+        <div className="bg-white rounded-xl shadow p-4 border-t-4 border-red-600">
           <p className="text-gray-500">
             Disruption Rate
           </p>
@@ -105,7 +106,7 @@ export default function Dashboard() {
           </h2>
         </div>
 
-        <div className="bg-white rounded-xl shadow p-4">
+        <div className="bg-white rounded-xl shadow p-4 border-t-4 border-yellow-600">
           <p className="text-gray-500">
             Avg Geopolitical Risk
           </p>
@@ -115,7 +116,7 @@ export default function Dashboard() {
           </h2>
         </div>
 
-        <div className="bg-white rounded-xl shadow p-4">
+        <div className="bg-white rounded-xl shadow p-4 border-t-4 border-red-600">
           <p className="text-gray-500">
             High Risk Shipments
           </p>
@@ -125,7 +126,7 @@ export default function Dashboard() {
           </h2>
         </div>
 
-        <div className="bg-white rounded-xl shadow p-4">
+        <div className="bg-white rounded-xl shadow p-4 border-t-4 border-green-600">
           <p className="text-gray-500">
             Avg Carrier Reliability
           </p>
@@ -141,7 +142,7 @@ export default function Dashboard() {
 
         {/* Monthly Disruptions */}
 
-        <div className="bg-white rounded-xl shadow p-6">
+        <div className="bg-white rounded-2xl shadow-md p-6 border border-slate-200">
 
           <h2 className="text-xl font-semibold mb-4">
             Monthly Disruptions
@@ -172,7 +173,7 @@ export default function Dashboard() {
 
         {/* Monthly Lead Time */}
 
-        <div className="bg-white rounded-xl shadow p-6">
+        <div className="bg-white rounded-2xl shadow p-6 border border-slate-200">
 
           <h2 className="text-xl font-semibold mb-4">
             Monthly Lead Time
@@ -411,11 +412,11 @@ export default function Dashboard() {
 
         <div className="overflow-x-auto max-h-[500px]">
 
-          <table className="w-full">
+          <table className="w-full text-sm">
 
-            <thead className="sticky top-0 bg-slate-50 z-10">
+            <thead className="sticky top-0 bg-slate-100">
 
-              <tr className="border-b bg-slate-50">
+              <tr className="border-b bg-slate-50 hover:bg-slate-200 transition">
 
                 <th className="p-3 text-left">Date</th>
                 <th className="p-3 text-left">Origin</th>
@@ -434,7 +435,7 @@ export default function Dashboard() {
 
                 <tr
                   key={index}
-                  className="border-b hover:bg-slate-50"
+                  className="border-b hover:bg-slate-50 hover:bg-blue-50 transition"
                 >
 
                   <td className="p-3">
