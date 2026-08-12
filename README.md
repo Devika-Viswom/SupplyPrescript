@@ -67,6 +67,29 @@ SupplyPrescript helps organizations:
 
 ---
 
+## Objectives
+
+The primary objectives are:
+
+### Predictive Objectives
+
+- Predict shipment disruptions
+- Estimate shipment lead time
+
+### Prescriptive Objectives
+
+- Generate recommendations to reduce risk
+- Suggest alternative operational strategies
+- Improve shipment planning
+
+### Business Objectives
+
+- Improve visibility across logistics operations
+- Reduce disruption-related losses
+- Improve service levels
+
+---
+
 ## Key Features
 
 ### 1. Disruption Risk Prediction
@@ -118,6 +141,7 @@ Dashboard Modules:
 
 - Dashboard Page
 - Analyze Page
+- History Page
 - Insights Page
 
 Capabilities:
@@ -134,25 +158,32 @@ Capabilities:
 ## System Architecture
 
 ```text
-                    User Input
-                         │
-                         ▼
-                FastAPI Backend
-                         │
-      ┌──────────────────┼──────────────────┐
-      │                  │                  │
-      ▼                  ▼                  ▼
-Disruption Model   Lead Time Model   Recommendation Engine
-      │                  │                  │
-      └──────────────────┼──────────────────┘
-                         ▼
-                 Dashboard Services
-                         │
-                         ▼
-                  Retool Dashboard
-                         │
-                         ▼
-                Business Decisions
+                    User
+                      │
+                      ▼
+             React Frontend
+                      │
+              REST API Calls
+                      │
+                      ▼
+               FastAPI Backend
+                      │
+        ┌─────────────┼─────────────┐
+        │             │             │
+        ▼             ▼             ▼
+ Prediction      Dashboard      History
+  Engine          Service       Service
+        │
+        ▼
+  ML Pipelines
+(Classifier + Regressor)
+        │
+        ▼
+ Recommendation Engine
+        │
+        ▼
+ PostgreSQL Database
+   (Supabase Cloud)
 ```
 
 ---
@@ -183,6 +214,35 @@ SupplyPrescript
 │       ├── df_final.pkl
 │       ├── df_classification_encoded.pkl
 │       └── df_regression_encoded.pkl
+│
+├── frontend/
+│   ├── public/
+│   │
+│   ├── src/
+│   │   ├── api/
+│   │   │   └── api.js
+│   │   │
+│   │   ├── components/
+│   │   │   ├── Navbar.jsx
+│   │   │   └── PredictionResult.jsx
+│   │   │
+│   │   ├── pages/
+│   │   │   ├── Dashboard.jsx
+│   │   │   ├── Predict.jsx
+│   │   │   ├── History.jsx
+│   │   │   └── Insights.jsx
+│   │   │
+│   │   ├── App.jsx
+│   │   ├── main.jsx
+│   │   └── index.css
+│   │
+│   ├── index.html
+│   ├── package.json
+│   ├── package-lock.json
+│   ├── vite.config.js
+│   ├── .eslintrc.json
+│   ├── .gitignore
+│   └── README.md
 │
 ├── models/
 │   ├── disruption_pipeline.pkl
@@ -438,31 +498,38 @@ Predict shipment lead time.
 
 | Method | Endpoint | Description |
 |----------|----------|-------------|
-| POST | `/predict` | Predict disruption risk, lead time, recommendations, and transport mode comparison |
+| POST | `/api/predict` | Predict disruption risk, lead time, recommendations, and transport mode comparison |
 
 ### Dashboard
 
 | Method | Endpoint | Description |
 |----------|----------|-------------|
-| GET | `/dashboard/summary` | Dashboard KPI summary |
-| GET | `/dashboard/charts` | Chart data for dashboard visualizations |
-| GET | `/dashboard/shipments` | Latest 50 shipment records |
+| GET | `/api/dashboard/kpi` | Dashboard KPI summary |
+| GET | `/api/dashboard/charts` | Chart data for dashboard visualizations |
+| GET | `/api/dashboard/shipments` | Latest shipment records |
 
 ### Insights
 
 | Method | Endpoint | Description |
-|----------|----------|-------------|
-| GET | `/insights/weather_risks` | Weather-related disruption analysis |
-| GET | `/insights/dataset` | Dataset summary statistics |
-| GET | `/insights/disruption_classifier` | Classification model metrics |
-| GET | `/insights/leadtime_regressor` | Regression model metrics |
+|----------|----------|----------|
+| GET | `/api/insights/dataset` | Dataset overview and summary statistics |
+| GET | `/api/insights/disruption_classifier` | Classification model performance metrics |
+| GET | `/api/insights/leadtime_regressor` | Regression model performance metrics |
+| GET | `/api/insights/feature_importance` | Feature importance analysis |
+| GET | `/api/insights/business_insights` | Business findings and recommendations |
 
-### History & Reports
+### History
 
 | Method | Endpoint | Description |
-|----------|----------|-------------|
-| GET | `/history?page=1` | Paginated prediction history |
-| GET | `/report/{prediction_id}` | Generate PDF report for a prediction |
+|----------|----------|----------|
+| GET | `/api/history` | Retrieve prediction history |
+| GET | `/api/history?page=1&limit=10` | Retrieve paginated prediction history |
+
+### Reports
+
+| Method | Endpoint | Description |
+|----------|----------|----------|
+| GET | `/api/report/{prediction_id}` | Generate PDF report for a specific prediction |
 
 ---
 
@@ -638,20 +705,27 @@ GET /report/{prediction_id}
 
 ## Technology Stack
 
-### Programming
+### Frontend
 
-- Python
+- React.js
+- Vite
+- Tailwind CSS
+- Axios
+- React Router DOM
+- Recharts
 
 ### Backend
 
 - FastAPI
 - Uvicorn
+- Pydantic
+- Python
 
 ### Machine Learning
 
+- XGBoost
+- Random Forest
 - Scikit-Learn
-- Random Forest Classifier
-- Random Forest Regressor
 - Joblib
 
 ### Data Processing
@@ -659,14 +733,19 @@ GET /report/{prediction_id}
 - Pandas
 - NumPy
 
-### Visualization & Analysis
+### Data Visualization
 
 - Matplotlib
 - Seaborn
 
-### Dashboard
+### Database
 
-- Retool
+- PostgreSQL
+- Supabase
+
+### Reporting
+
+- ReportLab
 
 ### Development Tools
 
@@ -675,13 +754,10 @@ GET /report/{prediction_id}
 - Git
 - GitHub
 
-### Database
+### Deployment
 
-- PostgreSQL
-
-### Reporting
-
-- ReportLab
+- Render
+- Supabase Cloud
 
 ---
 
@@ -722,18 +798,137 @@ pip install -r requirements.txt
 
 ---
 
-## Running the API
+## Environment Variables
 
-```bash
-cd api
-uvicorn app:app
+Create a `.env` file in the project root directory.
+
+```env
+DATABASE_URL=your_supabase_connection_string
 ```
 
-API Documentation:
+Example:
+
+```env
+DATABASE_URL=postgresql://username:password@host:5432/postgres
+```
+
+---
+
+## Running the Backend
+
+Start the FastAPI server:
+
+```bash
+uvicorn api.app:app --reload
+```
+
+Backend URL:
+
+```text
+http://localhost:8000
+```
+
+Swagger Documentation:
 
 ```text
 http://localhost:8000/docs
 ```
+
+ReDoc Documentation:
+
+```text
+http://localhost:8000/redoc
+```
+
+---
+
+## Frontend Setup
+
+Navigate to the frontend directory:
+
+```bash
+cd frontend
+```
+
+Install frontend dependencies:
+
+```bash
+npm install
+```
+
+Run development server:
+
+```bash
+npm run dev
+```
+
+Frontend URL:
+
+```text
+http://localhost:5173
+```
+
+---
+
+## Production Build
+
+Build the frontend application:
+
+```bash
+cd frontend
+npm run build
+```
+
+Build output:
+
+```text
+frontend/dist
+```
+
+---
+
+## Deployment
+
+### Backend Deployment
+
+**Platform:** Render
+
+Start Command:
+
+```bash
+uvicorn api.app:app --host 0.0.0.0 --port $PORT
+```
+
+---
+
+### Frontend Deployment
+
+**Platform:** Render Static Site
+
+Build Command:
+
+```bash
+npm install && npm run build
+```
+
+Publish Directory:
+
+```text
+dist
+```
+
+---
+
+### Database Deployment
+
+**Platform:** Supabase PostgreSQL
+
+Stores:
+
+- Prediction History
+- Shipment Inputs
+- Prediction Results
+- Generated Recommendations
 
 ---
 
