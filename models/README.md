@@ -38,8 +38,8 @@ Regression pipeline used to predict shipment lead time.
 
 #### Performance
 
-- MAE: 0.98
-- RMSE: 1.85
+- MAE: 0.977
+- RMSE: 1.848
 - R² Score: 0.996
 
 ## Usage

@@ -1,7 +1,7 @@
 import json
 from datetime import datetime
 
-from db import conn
+from api.connection import conn
 
 def save_prediction(
     shipment,
@@ -89,9 +89,9 @@ def save_prediction(
     except Exception as e:
 
         conn.rollback()
-        print("DATABASE ERROR:", e)
+        print("Database Error:", e)
         raise
-
+    
     finally:
 
         cursor.close()

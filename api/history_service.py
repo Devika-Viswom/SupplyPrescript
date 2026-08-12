@@ -1,4 +1,4 @@
-from db import conn
+from api.connection import conn
 
 def get_prediction_history(page):
 
@@ -13,7 +13,7 @@ def get_prediction_history(page):
         cursor.execute("""
             SELECT *
             FROM prediction_history
-            ORDER BY id DESC
+            ORDER BY id ASC
             LIMIT %s
             OFFSET %s
         """, (page_size, offset))

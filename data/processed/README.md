@@ -1,41 +1,83 @@
 # Processed Data
 
-## Overview
+This folder contains cleaned, engineered, and model-ready datasets generated during the data preparation phase.
 
-This folder contains cleaned, transformed, and feature-engineered datasets used throughout the SupplyPrescript project.
+The datasets represent different stages of the machine learning pipeline.
 
-These datasets are generated from the raw shipment data after preprocessing, encoding, and feature engineering.
+---
+
+## Dataset Lineage
+
+`raw1.csv` → Feature Engineering → `df_model.pkl` → Feature Selection → `df_final.pkl` → Encoding → (`df_classification_encoded.pkl`, `df_regression_encoded.pkl`)
+
+---
 
 ## Files
 
-### df_final.pkl
-
-Final processed dataset used for analysis and model development.
-
 ### df_model.pkl
 
-Dataset prepared specifically for machine learning model training.
+Purpose:
+Cleaned dataset with engineered business features.
 
-### df_classification_encoded.pkl
+Additional Features Created:
 
-Encoded dataset used for disruption classification model training.
+- Year
+- Month
+- Quarter
+- Route
+- Reliability_Level
+- Risk_Level
 
-### df_regression_encoded.pkl
+Total Features:
+20 columns
 
-Encoded dataset used for lead time regression model training.
+Usage:
+Exploratory analysis and business intelligence.
 
-## Purpose
+---
 
-The datasets in this folder are used for:
+### df_final.pkl
 
-- Exploratory Data Analysis (EDA)
-- Feature Selection
-- Classification Model Training
-- Regression Model Training
-- Business Analysis
+Purpose:
+Final analytical dataset used before encoding.
 
-## Notes
+Contains:
+- Original shipment variables
+- Engineered temporal features
+- Route information
+- Risk categories
+- Reliability categories
 
-Do not manually edit these files.
+Usage:
+Base dataset for all model pipelines.
 
-Regenerate them using the notebooks if preprocessing logic changes.
+---
+
+## Feature Categories
+
+Numerical Features:
+- Distance_km
+- Weight_MT
+- Fuel_Price_Index
+- Geopolitical_Risk_Score
+- Carrier_Reliability_Score
+- Year
+- Month
+- Quarter
+
+Categorical Features:
+- Transport_Mode
+- Product_Category
+- Weather_Condition
+- Route
+- Risk_Level
+- Reliability_Level
+
+Route Variations:
+64 unique routes
+
+Risk Levels:
+3 categories
+
+Reliability Levels:
+3 categories

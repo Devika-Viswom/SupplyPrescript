@@ -2,10 +2,10 @@ import joblib
 import pandas as pd
 from pathlib import Path
 
-from schemas import ShipmentInput
-from recommendation_engine import generate_recommendations
+from api.schemas import ShipmentInput
+from api.recommendation_engine import generate_recommendations
 
-from history import save_prediction
+from api.history import save_prediction
 
 BASE_DIR = Path(__file__).resolve().parent
 
