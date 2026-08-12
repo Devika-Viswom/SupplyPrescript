@@ -85,3 +85,11 @@ def predict_disruption(shipment: ShipmentData):
         "probability": round(float(probability), 3),
         "recommendation": recommendation
     }
+@app.get("/health")
+def health_check():
+    return {
+        "status": "healthy",
+        "service": "SupplyPrescript API",
+        "model": "XGBoost",
+        "version": "1.0"
+    }
