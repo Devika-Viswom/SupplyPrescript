@@ -172,7 +172,7 @@ export default function History() {
                   <td className="p-4">
 
                     <a
-                      href={`http://127.0.0.1:8000/api/report/${record.id}`}
+                      href={`/api/report/${record.id}`}
                       target="_blank"
                       rel="noreferrer"
                       className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
